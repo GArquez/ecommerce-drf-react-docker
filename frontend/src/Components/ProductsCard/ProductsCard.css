@@ -1,0 +1,23 @@
+.itemsContainer {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-content: space-around;
+    height: 100vh;
+}
+.card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.card__container-img {
+    height: 175px;
+}
+.card-img-top  {
+    width: 100%;
+    padding: 20px;
+    height: 200px; 
+    object-fit: cover; 
+    object-position: center;
+    background-color: #f8f9fa;
+}

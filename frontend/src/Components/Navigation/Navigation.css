@@ -1,0 +1,36 @@
+/* Efecto de transparencia y desenfoque (Glassmorphism) */
+.custom-navbar {
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+/* Animación sutil para los links */
+.nav-link {
+    position: relative;
+    font-weight: 500;
+    color: #333 !important;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #007bff;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* Estilo para el Dropdown de Categorías */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border-radius: 12px;
+}
