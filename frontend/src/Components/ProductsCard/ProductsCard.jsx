@@ -19,7 +19,7 @@ export function ProductsCard ({ id, name, brand, price, stock, description, img}
         <div className='itemsContainer'>
             <div className="card">
                 <div className="card__container-img">
-                <img src={`/${img}`} className="card-img-top" alt={name} referrerPolicy="no-referrer"/>
+                <img src={img} className="card-img-top" alt={name} referrerPolicy="no-referrer"/>
             </div>
             <div className="card-body">
                 <h5 className="card-title">{name}</h5>

@@ -5,8 +5,8 @@ echo "Applying migrations..."
 python manage.py migrate --noinput
 
 
-echo "Loading data from data.json..."
-python manage.py loaddata data.json
+echo "Loading data..."
+python scripts/seed_products.py
 
 # 3. Iniciar el servidor
 echo "Starting Gunicorn..."

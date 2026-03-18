@@ -15,7 +15,7 @@ class Product (models.Model):
     price = models.FloatField()
     stock = models.IntegerField()
     description = models.TextField(blank=False)
-    img = models.CharField(max_length=200)
+    img = models.ImageField(upload_to='products/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
