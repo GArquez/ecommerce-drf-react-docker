@@ -26,12 +26,17 @@ print(f"DEBUG: Key cargada (primeros 4): {key[:4] if key else 'VACIO'}")
 from django.conf import settings
 from ecommerce.models import Product, Category
 
-def upload_image_to_cloudinary(local_path):
-    if not os.path.exists(local_path):
-        print(f"⚠️ Archive not found: {local_path}")
-        return None
+def upload_image_to_cloudinary(local_path, product_name):
+
+    fixed_id = product_name.lower().replace(" ", "-")
+
     try:
-        response = cloudinary.uploader.upload(local_path, folder="products/")
+        response = cloudinary.uploader.upload(
+            local_path, 
+            folder="products/",
+            public_id=fixed_id,
+            overwrite=True      
+        )
         return response['public_id']
     except Exception as e:
         print(f"❌ Error uploading to Cloudinary: {e}")
@@ -71,7 +76,7 @@ def run_seed():
                 
                 full_img_path = os.path.join(base_dir, p_data['img'])
                 
-                cloudinary_id = upload_image_to_cloudinary(full_img_path)
+                cloudinary_id = upload_image_to_cloudinary(full_img_path, product_obj.name)
                 
                 if cloudinary_id:
                     product_obj.img = cloudinary_id

@@ -17,9 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from ecommerce.views import ApiRootView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', ApiRootView.as_view(), name='api-root'),
     path('admin/', admin.site.urls),
     path('api/', include('ecommerce.urls'))
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
