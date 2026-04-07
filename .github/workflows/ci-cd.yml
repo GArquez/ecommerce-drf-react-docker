@@ -22,7 +22,7 @@ jobs:
             -e CLOUDINARY_API_SECRET="${{ secrets.CLOUDINARY_API_SECRET }}" \
             -e FORCE_SEED="True" \
             -e PYTHONPATH="/app" \
-            backend-test sh -c "python manage.py migrate && python ecommerce/scripts/seed_products.py"
+            backend-test sh -c "python manage.py migrate && python manage.py test"
 
   test-frontend:
     runs-on: ubuntu-latest

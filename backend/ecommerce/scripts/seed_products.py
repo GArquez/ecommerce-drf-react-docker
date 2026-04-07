@@ -26,12 +26,17 @@ print(f"DEBUG: Key cargada (primeros 4): {key[:4] if key else 'VACIO'}")
 from django.conf import settings
 from ecommerce.models import Product, Category
 
-def upload_image_to_cloudinary(local_path):
-    if not os.path.exists(local_path):
-        print(f"⚠️ Archive not found: {local_path}")
-        return None
+def upload_image_to_cloudinary(local_path, product_name):
+
+    fixed_id = product_name.lower().replace(" ", "-")
+
     try:
-        response = cloudinary.uploader.upload(local_path, folder="products/")
+        response = cloudinary.uploader.upload(
+            local_path, 
+            folder="products/",
+            public_id=fixed_id,
+            overwrite=True      
+        )
         return response['public_id']
     except Exception as e:
         print(f"❌ Error uploading to Cloudinary: {e}")
@@ -41,6 +46,10 @@ def run_seed():
     if settings.DEBUG and os.getenv('FORCE_SEED') != 'True':
         print("⚠️ Local env. Seeder canceled.")
         return
+
+    print("Cleanin database...")
+    Product.objects.all().delete()
+    Category.objects.all().delete()
 
     products_data = { 'Laptops': [ { 'name': 'Pavilion x360', 'brand': 'HP', 'price': 850.00, 'stock': 15, 'description': 'Versatile 2-in-1 laptop with a 360-degree hinge, perfect for productivity and entertainment.', 'img': 'assets/laptop-hp.jpg' }, { 'name': 'ROG Zephyrus', 'brand': 'ASUS', 'price': 1450.00, 'stock': 8, 'description': 'High-performance gaming laptop with ultra-slim design and advanced cooling technology.', 'img': 'assets/laptop-asus.jpg' } ], 'Monitors': [ { 'name': 'Odyssey G5', 'brand': 'Samsung', 'price': 320.00, 'stock': 12, 'description': 'Curved gaming monitor with 144Hz refresh rate and HDR10 for immersive visuals.', 'img': 'assets/monitor-samsung.jpg' } ], 'Keyboards': [ { 'name': 'Magic Keyboard', 'brand': 'Apple', 'price': 99.00, 'stock': 25, 'description': 'Precise and comfortable typing experience with a sleek, wireless design.', 'img': 'assets/keyboard-apple.jpg' } ], 'Mouses': [ { 'name': 'Precision Wireless Mouse', 'brand': 'Generic Tech', 'price': 45.00, 'stock': 40, 'description': 'Ergonomic optical mouse with customizable buttons and long-lasting battery life.', 'img': 'assets/mouse.jpg' } ], 'Audio': [ { 'name': 'WH-1000XM4', 'brand': 'Sony', 'price': 350.00, 'stock': 10, 'description': 'Industry-leading noise canceling headphones with premium sound quality and smart features.', 'img': 'assets/headphone-sony.jpg' } ] }
 
@@ -71,12 +80,12 @@ def run_seed():
                 
                 full_img_path = os.path.join(base_dir, p_data['img'])
                 
-                cloudinary_id = upload_image_to_cloudinary(full_img_path)
+                cloudinary_id = upload_image_to_cloudinary(full_img_path, product_obj.name)
                 
                 if cloudinary_id:
-                    product_obj.img = cloudinary_id
+                    product_obj.img = f"products/{cloudinary_id}" 
                     product_obj.save()
-                    print(f"✅ Cloudinary ID saved for {product_obj.name}: {cloudinary_id}")
+                    print(f"✅ Cloudinary path saved: products/{cloudinary_id}")
             else:
                 print(f"ℹ️ {product_obj.name} already has a Cloudinary image.")
 

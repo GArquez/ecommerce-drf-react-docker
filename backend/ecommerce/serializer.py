@@ -4,6 +4,7 @@ from .models import Category, Product, Order, ItemOrder
 
 class ProductSerializer(serializers.ModelSerializer):
 
+    img = serializers.ImageField(use_url=True)
     category_name = serializers.CharField(source='category.name', read_only=True)
     class Meta:
         model = Product
@@ -33,7 +34,4 @@ class OrderSerializer(serializers.ModelSerializer):
         order = Order.objects.create(**validated_data)
         for item_data in items_data:
             ItemOrder.objects.create(order=order, **item_data)
-            product = item_data['product']
-            product.stock -= item_data['quantity']
-            product.save()
         return order
